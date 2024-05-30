@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>LIFF Stripe Checkout</title>
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rossorigin="anonymous">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" crossorigin="anonymous">
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/themes/base/jquery-ui.min.css">
 </head>
@@ -44,8 +44,7 @@
       var liffId = "2005475048-5ozq4vEe";
       console.log(`init liff, ID : ${liffId}`);
       initializeLiff(liffId);
-      });
-    
+
       function initializeLiff(liffId) {
           liff
           .init({
@@ -56,24 +55,30 @@
               if (!liff.isInClient() && !liff.isLoggedIn()) {
                   window.alert("LINEアカウントにログインしてください。");
                   liff.login({redirectUri: location.href});
-              }else{
+              } else {
                   console.log('Login Success');
+                  const idToken = liff.getDecodedIDToken();
+                  const userId = idToken.sub;
+                  $('form').append(`<input type="hidden" name="userId" value="${userId}">`);
+                  $('form').append(`<input type="submit" class="mt-4 btn btn-primary" value="送信">`);
               }
           })
           .catch((err) => {
               console.log('LIFF Initialization failed ', err);
           });
       }
-      const idToken = liff.getDecodedIDToken();
-      const userId = idToken.sub;
-      $('form').append(`<input type="hidden" name="userId" value="${userId}">`);
-      $('form').append(`<input type="submit" class="mt-4 btn btn-primary" value="送信">`);
-    })
 
-    $('form').submit(function( event ) {
-      event.preventDefault();
-      $.post( 'https://liff.line.me/2005475048-5ozq4vEe', $('form').serialize() );
-    });
+      $('form').submit(function(event) {
+          event.preventDefault();
+          $.post('https://liff.line.me/2005475048-5ozq4vEe', $('form').serialize())
+              .done(function(data) {
+                  alert("Data submitted successfully.");
+              })
+              .fail(function(xhr, status, error) {
+                  alert("An error occurred: " + error);
+              });
+      });
+  });
   </script>
 </body>
 </html>
