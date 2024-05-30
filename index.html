@@ -39,15 +39,21 @@
   <script src="https://static.line-scdn.net/liff/edge/2.1/sdk.js"></script>
   <script>
     liff.init({
-      liffId: '2005475048-5ozq4vEe'
-    }).catch((err) => {
-      console.log(err);
-    });
-
-    liff.ready.then(() => {
-      if (!liff.isLoggedIn()) {
-        liff.login();
-      }
+                liffId: liffId
+            })
+            .then(() => {
+                // Webブラウザからアクセスされた場合は、LINEにログインする
+                if (!liff.isInClient() && !liff.isLoggedIn()) {
+                    window.alert("LINEアカウントにログインしてください。");
+                    liff.login({redirectUri: location.href});
+                }else{
+                    console.log('Login Success');
+                }
+            })
+            .catch((err) => {
+                console.log('LIFF Initialization failed ', err);
+            });
+        }
       const idToken = liff.getDecodedIDToken();
       const userId = idToken.sub;
       $('form').append(`<input type="hidden" name="userId" value="${userId}">`);
