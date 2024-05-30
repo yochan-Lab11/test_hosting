@@ -54,7 +54,6 @@
             .catch((err) => {
                 console.log('LIFF Initialization failed ', err);
             });
-        }
       const idToken = liff.getDecodedIDToken();
       const userId = idToken.sub;
       $('form').append(`<input type="hidden" name="userId" value="${userId}">`);
