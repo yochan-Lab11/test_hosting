@@ -30,10 +30,6 @@
     <div>
         <input class="form-control w-100 mt-1" name="sukuwat" required>
     </div>
-    <div class="button-group submit-area hide">
-        <button type="button" class="btn btn-outline-primary back-btn">入力画面に戻る</button>
-        <button type="submit" class="btn btn-primary submitbtn">送信</button>
-    </div>
   </form>
 
   <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
@@ -42,22 +38,32 @@
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" crossorigin="anonymous"></script>
   <script src="https://static.line-scdn.net/liff/edge/2.1/sdk.js"></script>
   <script>
-    var liffId = "2005475048-5ozq4vEe";
-    liff.init({
-                liffId: liffId
-            })
-            .then(() => {
-                // Webブラウザからアクセスされた場合は、LINEにログインする
-                if (!liff.isInClient() && !liff.isLoggedIn()) {
-                    window.alert("LINEアカウントにログインしてください。");
-                    liff.login({redirectUri: location.href});
-                }else{
-                    console.log('Login Success');
-                }
-            })
-            .catch((err) => {
-                console.log('LIFF Initialization failed ', err);
-            });
+  $(document).ready(function () {
+      // liffId: LIFF URL "https://liff.line.me/xxx"のxxxに該当する箇所
+      // LINE DevelopersのLIFF画面より確認可能
+      var liffId = "2005475048-5ozq4vEe";
+      console.log(`init liff, ID : ${liffId}`);
+      initializeLiff(liffId);
+      });
+    
+      function initializeLiff(liffId) {
+          liff
+          .init({
+              liffId: liffId
+          })
+          .then(() => {
+              // Webブラウザからアクセスされた場合は、LINEにログインする
+              if (!liff.isInClient() && !liff.isLoggedIn()) {
+                  window.alert("LINEアカウントにログインしてください。");
+                  liff.login({redirectUri: location.href});
+              }else{
+                  console.log('Login Success');
+              }
+          })
+          .catch((err) => {
+              console.log('LIFF Initialization failed ', err);
+          });
+      }
       const idToken = liff.getDecodedIDToken();
       const userId = idToken.sub;
       $('form').append(`<input type="hidden" name="userId" value="${userId}">`);
